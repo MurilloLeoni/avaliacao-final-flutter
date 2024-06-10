@@ -132,6 +132,22 @@ class _LoginViewState extends State<LoginView> {
                   child: Text('Cadastre-se'),
                 ),
               ],
+            ),
+
+            SizedBox(height: 200),
+
+            //Btn_Sobre
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context,  'sobre');
+                  },
+                  icon: Icon(Icons.info),
+                ),
+                Text('Sobre'),
+              ],
             )
           ],
         ),

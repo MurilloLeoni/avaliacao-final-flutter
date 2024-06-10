@@ -8,6 +8,7 @@ import 'firebase_options.dart';
 import 'view/cadastrar_view.dart';
 import 'view/login_view.dart';
 import 'view/principal_view.dart';
+import 'view/sobre_view.dart';
 
 Future<void> main() async {
   //
@@ -38,6 +39,7 @@ class MainApp extends StatelessWidget {
         'login': (context) => LoginView(),
         'cadastrar': (context) => CadastrarView(),
         'principal': (context) => PrincipalView(),
+        'sobre': (context) => SobreView(),
       },
     );
   }
