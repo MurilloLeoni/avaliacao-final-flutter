@@ -44,6 +44,7 @@ class MainApp extends StatelessWidget {
         'sobre': (context) => SobreView(),
         //'buscar': (context) => Buscarview(),
         'alterar': (context) => AlterarDadosView(),
+        //'importante': (context) => ImportanteView(),
       },
     );
   }

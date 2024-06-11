@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +6,8 @@ import '../controller/login_controller.dart';
 import '../controller/tarefa_controller.dart';
 import '../model/tarefa.dart';
 import 'buscar_view.dart';
-import 'alterar_dados_view.dart'; // Importar a nova tela
+import 'alterar_dados_view.dart';
+import 'tarefas_importantes_view.dart';
 
 class PrincipalView extends StatefulWidget {
   const PrincipalView({super.key});
@@ -20,13 +20,12 @@ class _PrincipalViewState extends State<PrincipalView> {
   var txtTitulo = TextEditingController();
   var txtDescricao = TextEditingController();
 
-  // Criação da chave global para o Scaffold
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Definindo a chave no Scaffold
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Tarefas'),
         automaticallyImplyLeading: false,
@@ -40,15 +39,13 @@ class _PrincipalViewState extends State<PrincipalView> {
           ),
           IconButton(
             onPressed: () {
-              // Usando a chave para abrir o endDrawer
               _scaffoldKey.currentState?.openEndDrawer();
             },
-            icon: Icon(Icons.settings), // Botão de engrenagem
+            icon: Icon(Icons.settings),
           ),
         ],
       ),
       endDrawer: Drawer(
-        // Adicionar o Drawer lateral
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -74,7 +71,17 @@ class _PrincipalViewState extends State<PrincipalView> {
                 );
               },
             ),
-            // Outras opções podem ser adicionadas aqui
+            ListTile(
+              leading: Icon(Icons.priority_high),
+              title: Text('Tarefas Importantes'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TarefasImportantesView()),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -100,11 +107,7 @@ class _PrincipalViewState extends State<PrincipalView> {
                     itemBuilder: (context, index) {
                       String id = dados.docs[index].id;
                       dynamic item = dados.docs[index].data();
-
-                      // Garantir que 'importante' seja tratado como um bool
                       bool importante = item['importante'] ?? false;
-
-                      // Formatação da data
                       var dataFormatada = item['data'] != null
                           ? DateTime.parse(item['data'])
                               .toLocal()
@@ -156,7 +159,6 @@ class _PrincipalViewState extends State<PrincipalView> {
           },
         ),
       ),
-
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -191,8 +193,7 @@ class _PrincipalViewState extends State<PrincipalView> {
           var data = snapshot.data() as Map<String, dynamic>;
           txtTitulo.text = data['titulo'];
           txtDescricao.text = data['descricao'];
-          isImportante =
-              data['importante'] ?? false; // Certifique-se que é um bool
+          isImportante = data['importante'] ?? false;
           selectedDate =
               data['data'] != null ? DateTime.parse(data['data']) : null;
         }
@@ -293,7 +294,7 @@ class _PrincipalViewState extends State<PrincipalView> {
 
                 txtTitulo.clear();
                 txtDescricao.clear();
-                Navigator.of(context).pop(); // Fechar o diálogo ao salvar
+                Navigator.of(context).pop();
               },
             ),
           ],
