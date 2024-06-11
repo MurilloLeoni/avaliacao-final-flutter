@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../controller/login_controller.dart';
 import '../controller/tarefa_controller.dart';
 import '../model/tarefa.dart';
+import 'buscar_view.dart';
 
 class PrincipalView extends StatefulWidget {
   const PrincipalView({super.key});
@@ -31,11 +32,12 @@ class _PrincipalViewState extends State<PrincipalView> {
               Navigator.pop(context);
             },
             icon: Icon(Icons.exit_to_app),
-          )
+          ),
         ],
       ),
 
       // BODY
+
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         //
@@ -115,11 +117,28 @@ class _PrincipalViewState extends State<PrincipalView> {
         ),
       ),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          salvarTarefa(context);
-        },
-        child: Icon(Icons.add),
+      ///
+      /// Linha de botoes flutuantes
+      ///
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BuscaView()),
+              );
+            },
+            child: Icon(Icons.search),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              salvarTarefa(context);
+            },
+            child: Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }

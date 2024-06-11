@@ -9,6 +9,7 @@ import 'view/cadastrar_view.dart';
 import 'view/login_view.dart';
 import 'view/principal_view.dart';
 import 'view/sobre_view.dart';
+//import 'view/buscar_view.dart';
 
 Future<void> main() async {
   //
@@ -40,6 +41,7 @@ class MainApp extends StatelessWidget {
         'cadastrar': (context) => CadastrarView(),
         'principal': (context) => PrincipalView(),
         'sobre': (context) => SobreView(),
+        //'buscar': (context) => Buscarview(),
       },
     );
   }
