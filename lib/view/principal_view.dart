@@ -101,9 +101,28 @@ class _PrincipalViewState extends State<PrincipalView> {
                       String id = dados.docs[index].id;
                       dynamic item = dados.docs[index].data();
 
+                      // Garantir que 'importante' seja tratado como um bool
+                      bool importante = item['importante'] ?? false;
+
+                      // Formatação da data
+                      var dataFormatada = item['data'] != null
+                          ? DateTime.parse(item['data'])
+                              .toLocal()
+                              .toString()
+                              .split(' ')[0]
+                          : 'Sem data';
+
                       return ListTile(
                         title: Text(item['titulo']),
-                        subtitle: Text(item['descricao']),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(item['descricao']),
+                            SizedBox(height: 5),
+                            Text('Importante: ${importante ? 'Sim' : 'Não'}'),
+                            Text('Data: $dataFormatada'),
+                          ],
+                        ),
                         trailing: SizedBox(
                           width: 80,
                           child: Row(
@@ -137,6 +156,7 @@ class _PrincipalViewState extends State<PrincipalView> {
           },
         ),
       ),
+
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -161,41 +181,93 @@ class _PrincipalViewState extends State<PrincipalView> {
   }
 
   void salvarTarefa(context, {docId}) {
+    bool isImportante = false;
+    DateTime? selectedDate;
+
+    if (docId != null) {
+      var doc = FirebaseFirestore.instance.collection('tarefas').doc(docId);
+      doc.get().then((snapshot) {
+        if (snapshot.exists) {
+          var data = snapshot.data() as Map<String, dynamic>;
+          txtTitulo.text = data['titulo'];
+          txtDescricao.text = data['descricao'];
+          isImportante =
+              data['importante'] ?? false; // Certifique-se que é um bool
+          selectedDate =
+              data['data'] != null ? DateTime.parse(data['data']) : null;
+        }
+      });
+    }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text((docId == null) ? "Adicionar Tarefa" : "Editar Tarefa"),
-          content: SizedBox(
-            height: 250,
-            width: 300,
-            child: Column(
-              children: [
-                TextField(
-                  controller: txtTitulo,
-                  decoration: InputDecoration(
-                    labelText: 'Título',
-                    prefixIcon: Icon(Icons.description),
-                    border: OutlineInputBorder(),
-                  ),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: txtTitulo,
+                      decoration: InputDecoration(
+                        labelText: 'Título',
+                        prefixIcon: Icon(Icons.description),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    TextField(
+                      controller: txtDescricao,
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        labelText: 'Descrição',
+                        alignLabelWithHint: true,
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    CheckboxListTile(
+                      title: Text("Importante"),
+                      value: isImportante,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isImportante = value ?? false;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 15),
+                    ListTile(
+                      title: Text(
+                        selectedDate == null
+                            ? "Nenhuma data selecionada"
+                            : "Data: ${selectedDate!.toLocal()}".split(' ')[0],
+                      ),
+                      trailing: Icon(Icons.calendar_today),
+                      onTap: () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate: selectedDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (picked != null) {
+                          setState(() {
+                            selectedDate = picked;
+                          });
+                        }
+                      },
+                    ),
+                  ],
                 ),
-                SizedBox(height: 15),
-                TextField(
-                  controller: txtDescricao,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    labelText: 'Descrição',
-                    alignLabelWithHint: true,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ],
-            ),
+              );
+            },
           ),
           actionsPadding: EdgeInsets.fromLTRB(20, 0, 20, 10),
           actions: [
             TextButton(
-              child: Text("fechar"),
+              child: Text("Fechar"),
               onPressed: () {
                 txtTitulo.clear();
                 txtDescricao.clear();
@@ -203,12 +275,14 @@ class _PrincipalViewState extends State<PrincipalView> {
               },
             ),
             ElevatedButton(
-              child: Text("salvar"),
+              child: Text("Salvar"),
               onPressed: () {
                 var t = Tarefa(
                   LoginController().idUsuario(),
                   txtTitulo.text,
                   txtDescricao.text,
+                  importante: isImportante,
+                  data: selectedDate ?? DateTime.now(),
                 );
 
                 if (docId == null) {
