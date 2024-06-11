@@ -23,7 +23,7 @@ class _AlterarDadosViewState extends State<AlterarDadosView> {
   @override
   void initState() {
     super.initState();
-    // Se você quiser pré-preencher os dados existentes, pode fazer isso aqui
+    //  pré-preencher os dados existentes,  fazer isso aqui
     carregarDadosExistentes();
   }
 

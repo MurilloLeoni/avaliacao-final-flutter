@@ -1,14 +1,13 @@
 
-
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
-
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../controller/tarefa_controller.dart';
 import '../controller/login_controller.dart';
 import '../model/tarefa.dart';
-import 'alterar_dados_view.dart'; // Importar a nova tela
+
+enum OrderBy { date, title }
 
 class BuscaView extends StatefulWidget {
   @override
@@ -18,9 +17,52 @@ class BuscaView extends StatefulWidget {
 class _BuscaViewState extends State<BuscaView> {
   var txtSearch = TextEditingController();
   String searchQuery = "";
+  OrderBy orderBy = OrderBy.date;
 
   var txtTitulo = TextEditingController();
   var txtDescricao = TextEditingController();
+
+  void _showOrderDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Ordenar por'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text('Data'),
+                leading: Radio<OrderBy>(
+                  value: OrderBy.date,
+                  groupValue: orderBy,
+                  onChanged: (OrderBy? value) {
+                    setState(() {
+                      orderBy = value!;
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: Text('Título'),
+                leading: Radio<OrderBy>(
+                  value: OrderBy.title,
+                  groupValue: orderBy,
+                  onChanged: (OrderBy? value) {
+                    setState(() {
+                      orderBy = value!;
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +77,10 @@ class _BuscaViewState extends State<BuscaView> {
                 searchQuery = txtSearch.text;
               });
             },
+          ),
+          IconButton(
+            icon: Icon(Icons.filter_list),
+            onPressed: _showOrderDialog,
           ),
         ],
       ),
@@ -60,61 +106,85 @@ class _BuscaViewState extends State<BuscaView> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: TarefaController().listar().snapshots(),
                 builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                    case ConnectionState.waiting:
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    default:
-                      final dados = snapshot.requireData;
-                      final filteredDocs = dados.docs.where((doc) {
-                        final titulo = doc['titulo'].toString().toLowerCase();
-                        final descricao = doc['descricao'].toString().toLowerCase();
-                        return titulo.contains(searchQuery.toLowerCase()) ||
-                            descricao.contains(searchQuery.toLowerCase());
-                      }).toList();
-
-                      if (filteredDocs.isEmpty) {
-                        return Center(
-                          child: Text('Nenhuma tarefa encontrada.'),
-                        );
-                      }
-
-                      return ListView.builder(
-                        itemCount: filteredDocs.length,
-                        itemBuilder: (context, index) {
-                          final item = filteredDocs[index].data() as Map;
-                          final id = filteredDocs[index].id;
-
-                          return ListTile(
-                            title: Text(item['titulo']),
-                            subtitle: Text(item['descricao']),
-                            trailing: SizedBox(
-                              width: 80,
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.edit_outlined),
-                                    onPressed: () {
-                                      txtTitulo.text = item['titulo'];
-                                      txtDescricao.text = item['descricao'];
-                                      salvarTarefa(context, docId: id);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete_outlined),
-                                    onPressed: () {
-                                      TarefaController().excluir(context, id);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Erro: ${snapshot.error}'),
+                    );
                   }
+
+                  final dados = snapshot.requireData;
+                  final filteredDocs = dados.docs.where((doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+                    final titulo = data['titulo']?.toString().toLowerCase() ?? '';
+                    final descricao = data['descricao']?.toString().toLowerCase() ?? '';
+                    return titulo.contains(searchQuery.toLowerCase()) ||
+                        descricao.contains(searchQuery.toLowerCase());
+                  }).toList();
+
+                  if (filteredDocs.isEmpty) {
+                    return Center(
+                      child: Text('Nenhuma tarefa encontrada.'),
+                    );
+                  }
+
+                  // Ordenar os resultados com base na opção selecionada
+                  filteredDocs.sort((a, b) {
+                    final dataA = a.data() as Map<String, dynamic>;
+                    final dataB = b.data() as Map<String, dynamic>;
+
+                    switch (orderBy) {
+                      case OrderBy.date:
+                        final dateA = dataA['data'] != null
+                            ? DateTime.tryParse(dataA['data'])
+                            : DateTime.now();
+                        final dateB = dataB['data'] != null
+                            ? DateTime.tryParse(dataB['data'])
+                            : DateTime.now();
+                        return dateB!.compareTo(dateA!); // Inverter a ordem
+                      case OrderBy.title:
+                        final titleA = dataA['titulo'] ?? '';
+                        final titleB = dataB['titulo'] ?? '';
+                        return titleA.compareTo(titleB);
+                    }
+                  });
+
+                  return ListView.builder(
+                    itemCount: filteredDocs.length,
+                    itemBuilder: (context, index) {
+                      final item = filteredDocs[index].data() as Map<String, dynamic>;
+                      final id = filteredDocs[index].id;
+
+                      return ListTile(
+                        title: Text(item['titulo'] ?? ''),
+                        subtitle: Text(item['descricao'] ?? ''),
+                        trailing: SizedBox(
+                          width: 80,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.edit_outlined),
+                                onPressed: () {
+                                  txtTitulo.text = item['titulo'] ?? '';
+                                  txtDescricao.text = item['descricao'] ?? '';
+                                  salvarTarefa(context, docId: id);
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete_outlined),
+                                onPressed: () {
+                                  TarefaController().excluir(context, id);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
             ),
@@ -159,7 +229,7 @@ class _BuscaViewState extends State<BuscaView> {
           actionsPadding: EdgeInsets.fromLTRB(20, 0, 20, 10),
           actions: [
             TextButton(
-              child: Text("fechar"),
+              child: Text("Fechar"),
               onPressed: () {
                 txtTitulo.clear();
                 txtDescricao.clear();
@@ -167,7 +237,7 @@ class _BuscaViewState extends State<BuscaView> {
               },
             ),
             ElevatedButton(
-              child: Text("salvar"),
+              child: Text("Salvar"),
               onPressed: () {
                 var t = Tarefa(
                   LoginController().idUsuario(),
