@@ -62,17 +62,8 @@ class TarefaController {
     FirebaseFirestore.instance
         .collection('tarefas')
         .doc(id)
-        .get()
-        .then((snapshot) {
-      var tarefa = Tarefa.fromJson(snapshot.data()!);
-      if (tarefa.importante) {
-        // Se a tarefa é importante, remova apenas da coleção "importantes"
-        FirebaseFirestore.instance.collection('importantes').doc(id).delete();
-      } else {
-        // Se não for importante, remova da coleção "tarefas"
-        FirebaseFirestore.instance.collection('tarefas').doc(id).delete();
-      }
-      sucesso(context, 'Tarefa excluída com sucesso!');
-    }).catchError((e) => erro(context, 'Não foi possível excluir a tarefa.'));
+        .delete()
+        .then((value) => sucesso(context, 'Tarefa excluída com sucesso!'))
+        .catchError((e) => erro(context, 'Não foi possível excluir a tarefa.'));
   }
 }
