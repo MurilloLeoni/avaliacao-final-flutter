@@ -24,9 +24,10 @@ class LoginController {
       // Armazenar o NOME, UID, TELEFONE e CPF do usuário em uma coleção
       // no banco de dados Firestore
       //
-      FirebaseFirestore.instance.collection('usuarios').add({
+      var uid = resultado.user!.uid;
+      FirebaseFirestore.instance.collection('usuarios').doc(uid).set({
         "nome": nome,
-        "uid": resultado.user!.uid,
+        "uid": uid, // Usando o UID do usuário como ID do documento
         "telefone": telefone,
         "cpf": cpf,
       });
@@ -47,37 +48,37 @@ class LoginController {
   }
 
   //
-  //ATUALIZAR DADOS
+  // ATUALIZAR DADOS
   //
-  void atualizarDados(
-      BuildContext context, String nome, String telefone, String cpf) async {
-    try {
-      var user = FirebaseAuth.instance.currentUser;
-      var uid = user?.uid;
-
-      if (uid != null) {
-        var userDoc =
-            FirebaseFirestore.instance.collection('usuarios').doc(uid);
-        var userSnapshot = await userDoc.get();
-
-        if (userSnapshot.exists) {
-          await userDoc.update({
-            'nome': nome,
-            'telefone': telefone,
-            'cpf': cpf,
-          });
-
-          sucesso(context, 'Dados atualizados com sucesso!');
-          Navigator.pop(context);
-        } else {
-          erro(context, 'Documento do usuário não encontrado no Firestore.');
-        }
-      } else {
-        erro(context, 'UID do usuário não encontrado.');
-      }
-    } catch (e) {
-      erro(context, 'Erro ao atualizar dados: ${e.toString()}');
+  void salvarDados(
+      BuildContext context, String nome, String telefone, String cpf) {
+    var uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      erro(context, 'Usuário não está autenticado.');
+      return;
     }
+    if (nome.isEmpty || telefone.isEmpty || cpf.isEmpty) {
+      erro(context, 'Todos os campos devem ser preenchidos.');
+      return;
+    }
+    var dadosAtualizados = {
+      "nome": nome,
+      "telefone": telefone,
+      "cpf": cpf,
+    };
+
+    FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(uid)
+        .update(dadosAtualizados)
+        .then((value) {
+      erro(context, 'Não foi possível atualizar os dados.');
+    }).catchError((e) {
+      sucesso(context, 'Dados atualizados com sucesso!');
+    }).whenComplete(() {
+      print('Operação de atualização de dados concluída.');
+      Navigator.pop(context);
+    });
   }
 
   //
@@ -131,7 +132,7 @@ class LoginController {
   //
   // ID do Usuário Logado
   //
-  idUsuario() {
-    return FirebaseAuth.instance.currentUser!.uid;
+  String idUsuario() {
+    return FirebaseAuth.instance.currentUser?.uid ?? '';
   }
 }

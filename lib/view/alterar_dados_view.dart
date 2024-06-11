@@ -16,29 +16,54 @@ class _AlterarDadosViewState extends State<AlterarDadosView> {
   var txtNome = TextEditingController();
   var txtTelefone = TextEditingController();
   var txtCpf = TextEditingController();
+  final user = FirebaseAuth.instance.currentUser;
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    carregarDadosUsuario();
+    // Se você quiser pré-preencher os dados existentes, pode fazer isso aqui
+    carregarDadosExistentes();
   }
 
-  void carregarDadosUsuario() async {
-    var uid = LoginController().idUsuario();
-    var doc =
-        await FirebaseFirestore.instance.collection('usuarios').doc(uid).get();
-
-    if (doc.exists) {
-      setState(() {
-        txtNome.text = doc['nome'];
-        txtTelefone.text = doc['telefone'];
-        txtCpf.text = doc['cpf'];
-      });
-    } else {
-      erro(context, 'Documento do usuário não encontrado no Firestore.');
+  // Função para carregar dados existentes do usuário
+  void carregarDadosExistentes() async {
+    var uid = user?.uid;
+    if (uid != null) {
+      var docSnapshot = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(uid)
+          .get();
+      if (docSnapshot.exists) {
+        var dados = docSnapshot.data();
+        setState(() {
+          txtNome.text = dados?['nome'] ?? '';
+          txtTelefone.text = dados?['telefone'] ?? '';
+          txtCpf.text = dados?['cpf'] ?? '';
+        });
+      }
     }
+  }
+
+  String? _validatePhone(String? value) {
+    final phoneRegExp = RegExp(r'^\d{10,11}$');
+    if (value == null || value.isEmpty) {
+      return 'Telefone não pode estar vazio';
+    } else if (!phoneRegExp.hasMatch(value)) {
+      return 'Digite um telefone válido com 10 ou 11 dígitos';
+    }
+    return null;
+  }
+
+  String? _validateCpf(String? value) {
+    final cpfRegExp = RegExp(r'^\d{11}$');
+    if (value == null || value.isEmpty) {
+      return 'CPF não pode estar vazio';
+    } else if (!cpfRegExp.hasMatch(value)) {
+      return 'Digite um CPF válido com 11 dígitos';
+    }
+    return null;
   }
 
   @override
@@ -81,7 +106,7 @@ class _AlterarDadosViewState extends State<AlterarDadosView> {
               TextFormField(
                 controller: txtCpf,
                 decoration: InputDecoration(
-                  labelText: 'Cpf',
+                  labelText: 'CPF',
                   prefixIcon: Icon(Icons.badge),
                   border: OutlineInputBorder(),
                 ),
@@ -92,7 +117,7 @@ class _AlterarDadosViewState extends State<AlterarDadosView> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     // Se todas as validações passarem
-                    LoginController().atualizarDados(
+                    LoginController().salvarDados(
                       context,
                       txtNome.text,
                       txtTelefone.text,
@@ -100,7 +125,7 @@ class _AlterarDadosViewState extends State<AlterarDadosView> {
                     );
                   }
                 },
-                child: Text('Salvar Alterações'),
+                child: Text('Salvar'),
               ),
             ],
           ),
@@ -108,24 +133,4 @@ class _AlterarDadosViewState extends State<AlterarDadosView> {
       ),
     );
   }
-}
-
-String? _validatePhone(String? value) {
-  final phoneRegExp = RegExp(r'^\d{10,11}$');
-  if (value == null || value.isEmpty) {
-    return 'Telefone não pode estar vazio';
-  } else if (!phoneRegExp.hasMatch(value)) {
-    return 'Digite um telefone válido com 10 ou 11 dígitos';
-  }
-  return null;
-}
-
-String? _validateCpf(String? value) {
-  final cpfRegExp = RegExp(r'^\d{11}$');
-  if (value == null || value.isEmpty) {
-    return 'CPF não pode estar vazio';
-  } else if (!cpfRegExp.hasMatch(value)) {
-    return 'Digite um CPF válido com 11 dígitos';
-  }
-  return null;
 }
