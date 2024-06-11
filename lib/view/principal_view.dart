@@ -7,6 +7,7 @@ import '../controller/login_controller.dart';
 import '../controller/tarefa_controller.dart';
 import '../model/tarefa.dart';
 import 'buscar_view.dart';
+import 'alterar_dados_view.dart'; // Importar a nova tela
 
 class PrincipalView extends StatefulWidget {
   const PrincipalView({super.key});
@@ -19,9 +20,13 @@ class _PrincipalViewState extends State<PrincipalView> {
   var txtTitulo = TextEditingController();
   var txtDescricao = TextEditingController();
 
+  // Criação da chave global para o Scaffold
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey, // Definindo a chave no Scaffold
       appBar: AppBar(
         title: Text('Tarefas'),
         automaticallyImplyLeading: false,
@@ -33,56 +38,72 @@ class _PrincipalViewState extends State<PrincipalView> {
             },
             icon: Icon(Icons.exit_to_app),
           ),
+          IconButton(
+            onPressed: () {
+              // Usando a chave para abrir o endDrawer
+              _scaffoldKey.currentState?.openEndDrawer();
+            },
+            icon: Icon(Icons.settings), // Botão de engrenagem
+          ),
         ],
       ),
-
-      // BODY
-
+      endDrawer: Drawer(
+        // Adicionar o Drawer lateral
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Configurações',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Alterar Dados da Conta'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AlterarDadosView()),
+                );
+              },
+            ),
+            // Outras opções podem ser adicionadas aqui
+          ],
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        //
-        // Exibir as TAREFAS
-        //
         child: StreamBuilder<QuerySnapshot>(
-          //fluxo de dados
           stream: TarefaController().listar().snapshots(),
-
-          //exibição dos dados
           builder: (context, snapshot) {
-            //verificar o status da conexão
             switch (snapshot.connectionState) {
-              //sem conexão com do Firebase
               case ConnectionState.none:
                 return Center(
                   child: Text('Não foi possível conectar ao banco de dados'),
                 );
-
-              //aguardando a recuperação dos dados
               case ConnectionState.waiting:
                 return Center(
                   child: CircularProgressIndicator(),
                 );
-
-              //recuperar e exibir os dados
               default:
                 final dados = snapshot.requireData;
                 if (dados.size > 0) {
-                  //
-                  // LISTVIEW
-                  //
                   return ListView.builder(
                     itemCount: dados.size,
                     itemBuilder: (context, index) {
-                      //ID do documento
                       String id = dados.docs[index].id;
                       dynamic item = dados.docs[index].data();
 
                       return ListTile(
                         title: Text(item['titulo']),
                         subtitle: Text(item['descricao']),
-                        //
-                        // EDITAR e EXCLUIR
-                        //
                         trailing: SizedBox(
                           width: 80,
                           child: Row(
@@ -116,10 +137,6 @@ class _PrincipalViewState extends State<PrincipalView> {
           },
         ),
       ),
-
-      ///
-      /// Linha de botoes flutuantes
-      ///
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -143,14 +160,10 @@ class _PrincipalViewState extends State<PrincipalView> {
     );
   }
 
-  //
-  // ADICIONAR TAREFA
-  //
   void salvarTarefa(context, {docId}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // retorna um objeto do tipo Dialog
         return AlertDialog(
           title: Text((docId == null) ? "Adicionar Tarefa" : "Editar Tarefa"),
           content: SizedBox(
@@ -192,7 +205,6 @@ class _PrincipalViewState extends State<PrincipalView> {
             ElevatedButton(
               child: Text("salvar"),
               onPressed: () {
-                //instanciar um OBJETO Tarefa
                 var t = Tarefa(
                   LoginController().idUsuario(),
                   txtTitulo.text,
@@ -200,16 +212,14 @@ class _PrincipalViewState extends State<PrincipalView> {
                 );
 
                 if (docId == null) {
-                  //adicionar tarefa
                   TarefaController().adicionar(context, t);
                 } else {
-                  //atualizar tarefa
                   TarefaController().atualizar(context, docId, t);
                 }
 
-                //limpar os campos de texto
                 txtTitulo.clear();
                 txtDescricao.clear();
+                Navigator.of(context).pop(); // Fechar o diálogo ao salvar
               },
             ),
           ],

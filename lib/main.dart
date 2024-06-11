@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
+import 'view/alterar_dados_view.dart';
 import 'view/cadastrar_view.dart';
 import 'view/login_view.dart';
 import 'view/principal_view.dart';
@@ -42,6 +43,7 @@ class MainApp extends StatelessWidget {
         'principal': (context) => PrincipalView(),
         'sobre': (context) => SobreView(),
         //'buscar': (context) => Buscarview(),
+        'alterar': (context) => AlterarDadosView(),
       },
     );
   }

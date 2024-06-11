@@ -47,6 +47,40 @@ class LoginController {
   }
 
   //
+  //ATUALIZAR DADOS
+  //
+  void atualizarDados(
+      BuildContext context, String nome, String telefone, String cpf) async {
+    try {
+      var user = FirebaseAuth.instance.currentUser;
+      var uid = user?.uid;
+
+      if (uid != null) {
+        var userDoc =
+            FirebaseFirestore.instance.collection('usuarios').doc(uid);
+        var userSnapshot = await userDoc.get();
+
+        if (userSnapshot.exists) {
+          await userDoc.update({
+            'nome': nome,
+            'telefone': telefone,
+            'cpf': cpf,
+          });
+
+          sucesso(context, 'Dados atualizados com sucesso!');
+          Navigator.pop(context);
+        } else {
+          erro(context, 'Documento do usuário não encontrado no Firestore.');
+        }
+      } else {
+        erro(context, 'UID do usuário não encontrado.');
+      }
+    } catch (e) {
+      erro(context, 'Erro ao atualizar dados: ${e.toString()}');
+    }
+  }
+
+  //
   // LOGIN
   //
   login(BuildContext context, String email, String senha) {

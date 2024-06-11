@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../controller/login_controller.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  const LoginView({Key? key}) : super(key: key);
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -15,6 +15,8 @@ class _LoginViewState extends State<LoginView> {
   var txtEmail = TextEditingController();
   var txtSenha = TextEditingController();
   var txtEmailEsqueceuSenha = TextEditingController();
+
+  bool _showPassword = false; // Variável para controlar a visibilidade da senha
 
   @override
   void initState() {
@@ -45,10 +47,23 @@ class _LoginViewState extends State<LoginView> {
             SizedBox(height: 15),
             TextField(
               controller: txtSenha,
-              obscureText: true,
+              obscureText:
+                  !_showPassword, // Altera a visibilidade com a variável _showPassword
               decoration: InputDecoration(
                   labelText: 'Senha',
-                  prefixIcon: Icon(Icons.password),
+                  prefixIcon:
+                      Icon(Icons.lock), // Alterado para ícone de cadeado
+                  suffixIcon: IconButton(
+                    // Adicionando ícone para alternar visibilidade
+                    icon: Icon(_showPassword
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _showPassword = !_showPassword;
+                      });
+                    },
+                  ),
                   border: OutlineInputBorder()),
             ),
             Align(
@@ -142,7 +157,7 @@ class _LoginViewState extends State<LoginView> {
               children: [
                 IconButton(
                   onPressed: () {
-                    Navigator.pushNamed(context,  'sobre');
+                    Navigator.pushNamed(context, 'sobre');
                   },
                   icon: Icon(Icons.info),
                 ),
