@@ -11,7 +11,7 @@ class TarefasImportantesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tarefas Importantes'),
+        title: Text('Histórico'),
       ),
       body: FutureBuilder<QuerySnapshot>(
         future: TarefaController().listar().get(),

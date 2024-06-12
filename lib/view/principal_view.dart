@@ -84,7 +84,7 @@ class _PrincipalViewState extends State<PrincipalView> {
             ),
             ListTile(
               leading: Icon(Icons.priority_high),
-              title: Text('Tarefas Importantes'),
+              title: Text('Histórico'),
               onTap: () {
                 Navigator.push(
                   context,
