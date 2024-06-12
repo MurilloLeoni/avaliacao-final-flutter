@@ -27,8 +27,8 @@ class Tarefa {
       dados['uid'],
       dados['titulo'],
       dados['descricao'],
-      importante: dados['importante'] ?? false, // Garantir um valor booleano
-      data: DateTime.parse(dados['data']), // Lê o campo do JSON
+      importante: dados['importante'] ?? false,
+      data: DateTime.parse(dados['data']),
     );
   }
 }

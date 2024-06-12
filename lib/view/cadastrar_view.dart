@@ -26,9 +26,8 @@ class _CadastrarViewState extends State<CadastrarView> {
   bool _hasLowercase = false;
   bool _hasSpecialCharacters = false;
   bool _hasMinLength = false;
-  bool _obscurePassword = true; // Para alternar a visualização da senha
-  bool _obscureConfirmPassword =
-      true; // Para alternar a visualização da confirmação de senha
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   void _validatePassword(String value) {
     setState(() {
@@ -41,8 +40,7 @@ class _CadastrarViewState extends State<CadastrarView> {
   }
 
   String? _validateEmail(String? value) {
-    final emailRegExp = RegExp(
-        r'^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+'); // Regex simples para email
+    final emailRegExp = RegExp(r'^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+');
     if (value == null || value.isEmpty) {
       return 'Email não pode estar vazio';
     } else if (!emailRegExp.hasMatch(value)) {
@@ -68,7 +66,6 @@ class _CadastrarViewState extends State<CadastrarView> {
     } else if (!cpfRegExp.hasMatch(value)) {
       return 'Digite um CPF válido com 11 dígitos';
     }
-    // Adicionar validação adicional para CPF válido, se necessário.
     return null;
   }
 
@@ -230,8 +227,7 @@ class _CadastrarViewState extends State<CadastrarView> {
                       child: Text(
                         'CANCELAR',
                         style: TextStyle(
-                          fontWeight: FontWeight
-                              .bold, // Defina o estilo do texto como negrito
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -244,7 +240,6 @@ class _CadastrarViewState extends State<CadastrarView> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          // Se todas as validações passarem
                           LoginController().criarConta(
                             context,
                             txtNome.text,
@@ -258,8 +253,7 @@ class _CadastrarViewState extends State<CadastrarView> {
                       child: Text(
                         'CRIAR',
                         style: TextStyle(
-                          fontWeight: FontWeight
-                              .bold, // Defina o estilo do texto como negrito
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),

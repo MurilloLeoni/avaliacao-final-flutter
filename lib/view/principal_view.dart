@@ -111,10 +111,8 @@ class _PrincipalViewState extends State<PrincipalView> {
                       String id = dados.docs[index].id;
                       dynamic item = dados.docs[index].data();
 
-                      // Garantir que 'importante' seja tratado como um bool
                       bool importante = item['importante'] ?? false;
 
-                      // Formatação da data
                       var dataFormatada = item['data'] != null
                           ? DateTime.parse(item['data'])
                               .toLocal()
@@ -177,17 +175,13 @@ class _PrincipalViewState extends State<PrincipalView> {
               );
             },
             shape: RoundedRectangleBorder(
-              side: BorderSide(
-                  color: Colors.black), // Adicionando uma borda preta
-              borderRadius:
-                  BorderRadius.circular(5), // Adicionando uma borda circular
+              side: BorderSide(color: Colors.black),
+              borderRadius: BorderRadius.circular(5),
             ),
             child: Icon(Icons.search),
           ),
           Container(
-            margin: EdgeInsets.only(
-                left:
-                    50), // Defina o valor da margem esquerda conforme necessário
+            margin: EdgeInsets.only(left: 50),
             child: FloatingActionButton(
               onPressed: () {
                 salvarTarefa(context);
@@ -215,8 +209,7 @@ class _PrincipalViewState extends State<PrincipalView> {
           var data = snapshot.data() as Map<String, dynamic>;
           txtTitulo.text = data['titulo'];
           txtDescricao.text = data['descricao'];
-          isImportante =
-              data['importante'] ?? false; // Certifique-se que é um bool
+          isImportante = data['importante'] ?? false;
           selectedDate =
               data['data'] != null ? DateTime.parse(data['data']) : null;
         }
@@ -317,7 +310,7 @@ class _PrincipalViewState extends State<PrincipalView> {
 
                 txtTitulo.clear();
                 txtDescricao.clear();
-                Navigator.of(context).pop(); // Fechar o diálogo ao salvar
+                Navigator.of(context).pop();
               },
             ),
           ],

@@ -16,7 +16,7 @@ class _LoginViewState extends State<LoginView> {
   var txtSenha = TextEditingController();
   var txtEmailEsqueceuSenha = TextEditingController();
 
-  bool _showPassword = false; // Variável para controlar a visibilidade da senha
+  bool _showPassword = false;
 
   @override
   void initState() {
@@ -49,14 +49,11 @@ class _LoginViewState extends State<LoginView> {
             SizedBox(height: 15),
             TextField(
               controller: txtSenha,
-              obscureText:
-                  !_showPassword, // Altera a visibilidade com a variável _showPassword
+              obscureText: !_showPassword,
               decoration: InputDecoration(
                   labelText: 'Senha',
-                  prefixIcon:
-                      Icon(Icons.lock), // Alterado para ícone de cadeado
+                  prefixIcon: Icon(Icons.lock),
                   suffixIcon: IconButton(
-                    // Adicionando ícone para alternar visibilidade
                     icon: Icon(_showPassword
                         ? Icons.visibility
                         : Icons.visibility_off),
@@ -140,8 +137,7 @@ class _LoginViewState extends State<LoginView> {
               child: Text(
                 'ENTRAR',
                 style: TextStyle(
-                  fontWeight:
-                      FontWeight.bold, // Defina o estilo do texto como negrito
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -158,10 +154,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ],
             ),
-
             SizedBox(height: 200),
-
-            //Btn_Sobre
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

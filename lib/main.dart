@@ -42,9 +42,7 @@ class MainApp extends StatelessWidget {
         'cadastrar': (context) => CadastrarView(),
         'principal': (context) => PrincipalView(),
         'sobre': (context) => SobreView(),
-        //'buscar': (context) => Buscarview(),
         'alterar': (context) => AlterarDadosView(),
-        //'importante': (context) => ImportanteView(),
       },
     );
   }

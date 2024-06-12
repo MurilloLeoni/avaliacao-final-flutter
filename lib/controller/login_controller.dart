@@ -9,7 +9,7 @@ class LoginController {
   // CRIAR CONTA
   // Adiciona a conta de um novo usuário no serviço
   // Firebase Authentication
-  //
+
   criarConta(BuildContext context, String nome, String email, String senha,
       String telefone, String cpf) {
     FirebaseAuth.instance
@@ -19,15 +19,13 @@ class LoginController {
     )
         .then((resultado) {
       // Sucesso
-
-      //
       // Armazenar o NOME, UID, TELEFONE e CPF do usuário em uma coleção
       // no banco de dados Firestore
       //
       var uid = resultado.user!.uid;
       FirebaseFirestore.instance.collection('usuarios').doc(uid).set({
         "nome": nome,
-        "uid": uid, // Usando o UID do usuário como ID do documento
+        "uid": uid,
         "telefone": telefone,
         "cpf": cpf,
       });

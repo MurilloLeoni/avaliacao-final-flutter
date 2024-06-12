@@ -11,7 +11,6 @@ class TarefaImportante {
     required this.data,
   });
 
-  // Converte um objeto Dart em um JSOn
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'uid': uid,
@@ -21,7 +20,6 @@ class TarefaImportante {
     };
   }
 
-  // Converte um JSON em um objeto Dart
   factory TarefaImportante.fromJson(Map<String, dynamic> dados) {
     return TarefaImportante(
       uid: dados['uid'],

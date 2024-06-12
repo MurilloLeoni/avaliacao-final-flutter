@@ -29,7 +29,6 @@ class TarefasImportantesView extends StatelessWidget {
               return Text('Nenhuma tarefa marcada como importante.');
             }
 
-            // Exibir as tarefas importantes
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
@@ -38,7 +37,6 @@ class TarefasImportantesView extends StatelessWidget {
                 return ListTile(
                   title: Text(tarefa.titulo),
                   subtitle: Text(tarefa.descricao),
-                  // Adicione aqui qualquer outro elemento que deseje exibir
                 );
               },
             );

@@ -9,6 +9,8 @@ import '../model/tarefa.dart';
 enum OrderBy { date, title, oldest, newest }
 
 class BuscaView extends StatefulWidget {
+  const BuscaView({super.key});
+
   @override
   _BuscaViewState createState() => _BuscaViewState();
 }
@@ -139,7 +141,6 @@ class _BuscaViewState extends State<BuscaView> {
                     );
                   }
 
-                  // Ordenar os resultados com base na opção selecionada
                   filteredDocs.sort((a, b) {
                     final dataA = a.data() as Map<String, dynamic>;
                     final dataB = b.data() as Map<String, dynamic>;
@@ -152,7 +153,7 @@ class _BuscaViewState extends State<BuscaView> {
                         final dateB = dataB['data'] != null
                             ? DateTime.tryParse(dataB['data'])
                             : DateTime.now();
-                        return dateB!.compareTo(dateA!); // Inverter a ordem
+                        return dateB!.compareTo(dateA!);
                       case OrderBy.title:
                         final titleA = dataA['titulo'] ?? '';
                         final titleB = dataB['titulo'] ?? '';
@@ -278,7 +279,7 @@ class _BuscaViewState extends State<BuscaView> {
 
                 txtTitulo.clear();
                 txtDescricao.clear();
-                Navigator.of(context).pop(); // Fechar o diálogo ao salvar
+                Navigator.of(context).pop();
               },
             ),
           ],

@@ -35,7 +35,7 @@ class _SobreViewState extends State<SobreView> {
             ),
             SizedBox(height: 8),
             Text(
-              'Organizador de anotações.', // ATUALIZAR TEMA
+              'Organizador de anotações.',
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 20),
@@ -48,7 +48,7 @@ class _SobreViewState extends State<SobreView> {
             ),
             SizedBox(height: 8),
             Text(
-              'Criar anotações de forma simples e objetiva.', // ATUALIZAR OBJETIVO
+              'Criar anotações de forma simples e objetiva.',
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 20),
@@ -61,11 +61,11 @@ class _SobreViewState extends State<SobreView> {
             ),
             SizedBox(height: 8),
             Text(
-              'Murillo Leoni', //  NOMES
+              'Murillo Leoni',
               style: TextStyle(fontSize: 18),
             ),
             Text(
-              'Carlos Germano G. de Souza', //  NOMES
+              'Carlos Germano G. de Souza',
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 40),

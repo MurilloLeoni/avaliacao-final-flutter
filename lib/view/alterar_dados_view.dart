@@ -25,11 +25,9 @@ class _AlterarDadosViewState extends State<AlterarDadosView> {
   @override
   void initState() {
     super.initState();
-    //  pré-preencher os dados existentes,  fazer isso aqui
     carregarDadosExistentes();
   }
 
-  // Função para carregar dados existentes do usuário
   void carregarDadosExistentes() async {
     var uid = user?.uid;
     if (uid != null) {
@@ -120,7 +118,6 @@ class _AlterarDadosViewState extends State<AlterarDadosView> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Se todas as validações passarem
                     LoginController().salvarDados(
                       context,
                       txtNome.text,
