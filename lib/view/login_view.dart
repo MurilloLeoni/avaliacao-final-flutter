@@ -154,7 +154,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ],
             ),
-            SizedBox(height: 200),
+            SizedBox(height: 80),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -164,7 +164,7 @@ class _LoginViewState extends State<LoginView> {
                   },
                   icon: Icon(Icons.info),
                 ),
-                Text('Sobre'),
+                Text('SOBRE NÓS'),
               ],
             )
           ],
