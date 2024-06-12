@@ -84,8 +84,9 @@ class _CadastrarViewState extends State<CadastrarView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(30, 50, 30, 50),
+      body: Container(
+        color: Color.fromARGB(255, 217, 222, 224),
+        padding: EdgeInsets.fromLTRB(30, 50, 30, 85),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -219,13 +220,26 @@ class _CadastrarViewState extends State<CadastrarView> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 214, 210, 200),
+                        minimumSize: Size(140, 40),
+                      ),
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text('cancelar'),
+                      child: Text(
+                        'CANCELAR',
+                        style: TextStyle(
+                          fontWeight: FontWeight
+                              .bold, // Defina o estilo do texto como negrito
+                        ),
+                      ),
                     ),
                     ElevatedButton(
                       style: OutlinedButton.styleFrom(
+                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                        backgroundColor:
+                            const Color.fromARGB(255, 160, 158, 153),
                         minimumSize: Size(140, 40),
                       ),
                       onPressed: () {
@@ -241,7 +255,13 @@ class _CadastrarViewState extends State<CadastrarView> {
                           );
                         }
                       },
-                      child: Text('salvar'),
+                      child: Text(
+                        'CRIAR',
+                        style: TextStyle(
+                          fontWeight: FontWeight
+                              .bold, // Defina o estilo do texto como negrito
+                        ),
+                      ),
                     ),
                   ],
                 ),

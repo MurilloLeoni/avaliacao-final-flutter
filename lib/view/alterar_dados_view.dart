@@ -8,6 +8,8 @@ import '../controller/login_controller.dart';
 import '../view/util.dart';
 
 class AlterarDadosView extends StatefulWidget {
+  const AlterarDadosView({super.key});
+
   @override
   _AlterarDadosViewState createState() => _AlterarDadosViewState();
 }
@@ -70,9 +72,11 @@ class _AlterarDadosViewState extends State<AlterarDadosView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 44, 217, 64),
         title: Text('Alterar Dados da Conta'),
       ),
-      body: Padding(
+      body: Container(
+        color: Color.fromARGB(255, 217, 222, 224),
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,

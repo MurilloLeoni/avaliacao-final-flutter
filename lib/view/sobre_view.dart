@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class SobreView extends StatefulWidget {
-  const SobreView({Key? key}) : super(key: key);
+  const SobreView({super.key});
 
   @override
   State<SobreView> createState() => _SobreViewState();
@@ -18,10 +18,10 @@ class _SobreViewState extends State<SobreView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sobre o APP'),
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Color.fromARGB(255, 44, 217, 64),
       ),
       body: Container(
-        color: Colors.grey[100],
+        color: Color.fromARGB(255, 217, 222, 224),
         padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

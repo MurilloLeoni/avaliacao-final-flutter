@@ -80,6 +80,7 @@ class _BuscaViewState extends State<BuscaView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 44, 217, 64),
         title: Text('Buscar Tarefas'),
         actions: [
           IconButton(
@@ -88,7 +89,8 @@ class _BuscaViewState extends State<BuscaView> {
           ),
         ],
       ),
-      body: Padding(
+      body: Container(
+        color: Color.fromARGB(255, 217, 222, 224),
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
@@ -123,8 +125,10 @@ class _BuscaViewState extends State<BuscaView> {
                   final dados = snapshot.requireData;
                   final filteredDocs = dados.docs.where((doc) {
                     final data = doc.data() as Map<String, dynamic>;
-                    final titulo = data['titulo']?.toString().toLowerCase() ?? '';
-                    final descricao = data['descricao']?.toString().toLowerCase() ?? '';
+                    final titulo =
+                        data['titulo']?.toString().toLowerCase() ?? '';
+                    final descricao =
+                        data['descricao']?.toString().toLowerCase() ?? '';
                     return titulo.contains(searchQuery.toLowerCase()) ||
                         descricao.contains(searchQuery.toLowerCase());
                   }).toList();
@@ -175,7 +179,8 @@ class _BuscaViewState extends State<BuscaView> {
                   return ListView.builder(
                     itemCount: filteredDocs.length,
                     itemBuilder: (context, index) {
-                      final item = filteredDocs[index].data() as Map<String, dynamic>;
+                      final item =
+                          filteredDocs[index].data() as Map<String, dynamic>;
                       final id = filteredDocs[index].id;
 
                       return ListTile(
@@ -262,7 +267,7 @@ class _BuscaViewState extends State<BuscaView> {
                 var t = Tarefa(
                   LoginController().idUsuario(),
                   txtTitulo.text,
-                  txtDescricao.text,  
+                  txtDescricao.text,
                 );
 
                 if (docId == null) {
@@ -282,5 +287,3 @@ class _BuscaViewState extends State<BuscaView> {
     );
   }
 }
-
-                   

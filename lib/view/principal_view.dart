@@ -8,7 +8,7 @@ import '../controller/tarefa_controller.dart';
 import '../model/tarefa.dart';
 import 'buscar_view.dart';
 import 'alterar_dados_view.dart';
-import 'tarefas_importantes_view.dart'; // Importar a nova tela
+import 'tarefas_importantes_view.dart';
 
 class PrincipalView extends StatefulWidget {
   const PrincipalView({super.key});
@@ -21,14 +21,14 @@ class _PrincipalViewState extends State<PrincipalView> {
   var txtTitulo = TextEditingController();
   var txtDescricao = TextEditingController();
 
-  // Criação da chave global para o Scaffold
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Definindo a chave no Scaffold
+      key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 44, 217, 64),
         title: Text('Tarefas'),
         automaticallyImplyLeading: false,
         actions: [
@@ -39,24 +39,15 @@ class _PrincipalViewState extends State<PrincipalView> {
             },
             icon: Icon(Icons.exit_to_app),
           ),
-
-        //IconButton(
-          //   onPressed: () {
-          //   },
-          //   icon: Icon(Icons.search),
-          // ),
-
           IconButton(
             onPressed: () {
-              // Usando a chave para abrir o endDrawer
               _scaffoldKey.currentState?.openEndDrawer();
             },
-            icon: Icon(Icons.settings), // Botão de engrenagem
+            icon: Icon(Icons.settings),
           ),
         ],
       ),
       endDrawer: Drawer(
-        // Adicionar o Drawer lateral
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -93,11 +84,11 @@ class _PrincipalViewState extends State<PrincipalView> {
                 );
               },
             ),
-
           ],
         ),
       ),
-      body: Padding(
+      body: Container(
+        color: Color.fromARGB(255, 217, 222, 224),
         padding: const EdgeInsets.all(20.0),
         child: StreamBuilder<QuerySnapshot>(
           stream: TarefaController().listar().snapshots(),
@@ -175,7 +166,6 @@ class _PrincipalViewState extends State<PrincipalView> {
           },
         ),
       ),
-
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -186,13 +176,28 @@ class _PrincipalViewState extends State<PrincipalView> {
                 MaterialPageRoute(builder: (context) => BuscaView()),
               );
             },
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                  color: Colors.black), // Adicionando uma borda preta
+              borderRadius:
+                  BorderRadius.circular(5), // Adicionando uma borda circular
+            ),
             child: Icon(Icons.search),
           ),
-          FloatingActionButton(
-            onPressed: () {
-              salvarTarefa(context);
-            },
-            child: Icon(Icons.add),
+          Container(
+            margin: EdgeInsets.only(
+                left:
+                    50), // Defina o valor da margem esquerda conforme necessário
+            child: FloatingActionButton(
+              onPressed: () {
+                salvarTarefa(context);
+              },
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: Colors.black),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Icon(Icons.add),
+            ),
           ),
         ],
       ),

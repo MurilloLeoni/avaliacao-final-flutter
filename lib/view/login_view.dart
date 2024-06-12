@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../controller/login_controller.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+  const LoginView({super.key});
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -28,12 +28,14 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
+        body: Container(
+      color: Color.fromARGB(255, 217, 222, 224),
+      child: Padding(
         padding: EdgeInsets.fromLTRB(30, 50, 30, 50),
         child: Column(
           children: [
             Text(
-              'Login',
+              'LOGIN',
               style: TextStyle(fontSize: 60),
             ),
             SizedBox(height: 60),
@@ -124,6 +126,8 @@ class _LoginViewState extends State<LoginView> {
             SizedBox(height: 15),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                backgroundColor: const Color.fromARGB(255, 160, 158, 153),
                 minimumSize: Size(200, 40),
               ),
               onPressed: () {
@@ -133,7 +137,13 @@ class _LoginViewState extends State<LoginView> {
                   txtSenha.text,
                 );
               },
-              child: Text('Entrar'),
+              child: Text(
+                'ENTRAR',
+                style: TextStyle(
+                  fontWeight:
+                      FontWeight.bold, // Defina o estilo do texto como negrito
+                ),
+              ),
             ),
             SizedBox(height: 40),
             Row(
@@ -167,6 +177,6 @@ class _LoginViewState extends State<LoginView> {
           ],
         ),
       ),
-    );
+    ));
   }
 }
