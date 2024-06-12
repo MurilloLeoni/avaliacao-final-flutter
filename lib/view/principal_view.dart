@@ -39,6 +39,13 @@ class _PrincipalViewState extends State<PrincipalView> {
             },
             icon: Icon(Icons.exit_to_app),
           ),
+
+        //IconButton(
+          //   onPressed: () {
+          //   },
+          //   icon: Icon(Icons.search),
+          // ),
+
           IconButton(
             onPressed: () {
               // Usando a chave para abrir o endDrawer
