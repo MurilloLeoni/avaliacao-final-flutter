@@ -87,7 +87,6 @@ class _PrincipalViewState extends State<PrincipalView> {
               },
             ),
 
-            // Outras opções podem ser adicionadas aqui
           ],
         ),
       ),

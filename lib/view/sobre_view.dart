@@ -35,7 +35,7 @@ class _SobreViewState extends State<SobreView> {
             ),
             SizedBox(height: 8),
             Text(
-              'XYZ', // ATUALIZAR TEMA
+              'Organizador de anotações.', // ATUALIZAR TEMA
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 20),
@@ -48,7 +48,7 @@ class _SobreViewState extends State<SobreView> {
             ),
             SizedBox(height: 8),
             Text(
-              'ABC', // ATUALIZAR OBJETIVO
+              'Criar anotações de forma simples e objetiva.', // ATUALIZAR OBJETIVO
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 20),

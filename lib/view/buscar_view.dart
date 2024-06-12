@@ -1,4 +1,3 @@
-
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
@@ -7,7 +6,7 @@ import '../controller/tarefa_controller.dart';
 import '../controller/login_controller.dart';
 import '../model/tarefa.dart';
 
-enum OrderBy { date, title }
+enum OrderBy { date, title, oldest, newest }
 
 class BuscaView extends StatefulWidget {
   @override
@@ -32,9 +31,9 @@ class _BuscaViewState extends State<BuscaView> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: Text('Data'),
+                title: Text('Título'),
                 leading: Radio<OrderBy>(
-                  value: OrderBy.date,
+                  value: OrderBy.title,
                   groupValue: orderBy,
                   onChanged: (OrderBy? value) {
                     setState(() {
@@ -45,9 +44,22 @@ class _BuscaViewState extends State<BuscaView> {
                 ),
               ),
               ListTile(
-                title: Text('Título'),
+                title: Text('Mais recente'),
                 leading: Radio<OrderBy>(
-                  value: OrderBy.title,
+                  value: OrderBy.oldest,
+                  groupValue: orderBy,
+                  onChanged: (OrderBy? value) {
+                    setState(() {
+                      orderBy = value!;
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: Text('Mais antigo'),
+                leading: Radio<OrderBy>(
+                  value: OrderBy.newest,
                   groupValue: orderBy,
                   onChanged: (OrderBy? value) {
                     setState(() {
@@ -70,14 +82,6 @@ class _BuscaViewState extends State<BuscaView> {
       appBar: AppBar(
         title: Text('Buscar Tarefas'),
         actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              setState(() {
-                searchQuery = txtSearch.text;
-              });
-            },
-          ),
           IconButton(
             icon: Icon(Icons.filter_list),
             onPressed: _showOrderDialog,
@@ -149,6 +153,22 @@ class _BuscaViewState extends State<BuscaView> {
                         final titleA = dataA['titulo'] ?? '';
                         final titleB = dataB['titulo'] ?? '';
                         return titleA.compareTo(titleB);
+                      case OrderBy.oldest:
+                        final dateA = dataA['data'] != null
+                            ? DateTime.tryParse(dataA['data'])
+                            : DateTime.now();
+                        final dateB = dataB['data'] != null
+                            ? DateTime.tryParse(dataB['data'])
+                            : DateTime.now();
+                        return dateA!.compareTo(dateB!);
+                      case OrderBy.newest:
+                        final dateA = dataA['data'] != null
+                            ? DateTime.tryParse(dataA['data'])
+                            : DateTime.now();
+                        final dateB = dataB['data'] != null
+                            ? DateTime.tryParse(dataB['data'])
+                            : DateTime.now();
+                        return dateB!.compareTo(dateA!);
                     }
                   });
 
@@ -194,7 +214,7 @@ class _BuscaViewState extends State<BuscaView> {
     );
   }
 
-  void salvarTarefa(context, {docId}) {
+  void salvarTarefa(BuildContext context, {docId}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -242,7 +262,7 @@ class _BuscaViewState extends State<BuscaView> {
                 var t = Tarefa(
                   LoginController().idUsuario(),
                   txtTitulo.text,
-                  txtDescricao.text,
+                  txtDescricao.text,  
                 );
 
                 if (docId == null) {
@@ -262,3 +282,5 @@ class _BuscaViewState extends State<BuscaView> {
     );
   }
 }
+
+                   
