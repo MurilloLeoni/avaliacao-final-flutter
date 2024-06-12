@@ -16,8 +16,8 @@ class Tarefa {
       'uid': uid,
       'titulo': titulo,
       'descricao': descricao,
-      'importante': importante,
-      'data': data.toIso8601String(),
+      'importante': importante, // Adiciona o campo ao JSON
+      'data': data.toIso8601String(), // Adiciona o campo ao JSON
     };
   }
 

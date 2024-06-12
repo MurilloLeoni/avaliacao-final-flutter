@@ -1,9 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
+//ignore_for_file: prefer_const_constructors
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../controller/login_controller.dart';
 import '../controller/tarefa_controller.dart';
-import '../model/importante.dart';
 import '../model/tarefa.dart';
 
 class TarefasImportantesView extends StatelessWidget {
@@ -16,10 +14,7 @@ class TarefasImportantesView extends StatelessWidget {
         title: Text('Tarefas Importantes'),
       ),
       body: FutureBuilder<QuerySnapshot>(
-        future: FirebaseFirestore.instance
-            .collection('importantes')
-            .where('uid', isEqualTo: LoginController().idUsuario())
-            .get(),
+        future: TarefaController().listar().get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
@@ -31,15 +26,15 @@ class TarefasImportantesView extends StatelessWidget {
             return Text('Nenhuma tarefa marcada como importante.');
           }
 
+          // Exibir as tarefas importantes
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
-              var data =
-                  snapshot.data!.docs[index].data() as Map<String, dynamic>;
-              var tarefa = TarefaImportante.fromJson(data);
+             var tarefa = Tarefa.fromJson(snapshot.data!.docs[index].data() as Map<String, dynamic>);
               return ListTile(
                 title: Text(tarefa.titulo),
                 subtitle: Text(tarefa.descricao),
+                // Adicione aqui qualquer outro elemento que deseje exibir
               );
             },
           );

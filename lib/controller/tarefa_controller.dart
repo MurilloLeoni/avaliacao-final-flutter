@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../model/importante.dart';
 import '../model/tarefa.dart';
 import '../view/util.dart';
 import 'login_controller.dart';
@@ -11,21 +10,7 @@ class TarefaController {
     FirebaseFirestore.instance
         .collection('tarefas')
         .add(t.toJson())
-        .then((value) {
-          // Se a tarefa for marcada como importante, adicione também à coleção "importantes"
-          if (t.importante) {
-            TarefaImportante importante = TarefaImportante(
-              uid: t.uid,
-              titulo: t.titulo,
-              descricao: t.descricao,
-              data: t.data,
-            );
-            FirebaseFirestore.instance
-                .collection('importantes')
-                .add(importante.toJson());
-          }
-          sucesso(context, 'Tarefa adicionada com sucesso!');
-        })
+        .then((value) => sucesso(context, 'Tarefa adicionada com sucesso!'))
         .catchError(
             (e) => erro(context, 'Não foi possível adicionar a tarefa.'))
         .whenComplete(() => Navigator.pop(context));
@@ -37,8 +22,7 @@ class TarefaController {
   listar() {
     return FirebaseFirestore.instance
         .collection('tarefas')
-        .where('uid', isEqualTo: LoginController().idUsuario())
-        .where('importante', isEqualTo: true); // Filtrar tarefas importantes
+        .where('uid', isEqualTo: LoginController().idUsuario());
   }
 
   //
